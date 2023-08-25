@@ -12,8 +12,8 @@
 const defaultConfig = {
   format: {
     startWith: '/**',
-    middleWith: '*',
-    endWith: '*/',
+    middleWith: ' * ',
+    endWith: ' */',
     headerPrefix: '@',
   },
   header: {

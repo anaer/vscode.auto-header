@@ -1,7 +1,13 @@
+# 修改说明
+
+1. 去掉代码中的空格拼接符, 完全根据配置信息进行配置
+2. 添加markdown文件头格式
+3. 调整package.json, 去掉无用配置
+
 # auto-header
 
 This extension allows **quickly add file header** in the active text editor.
-And also allows **update the modify time and modifier automatic** in the file header comments 
+And also allows **update the modify time and modifier automatic** in the file header comments
 
 ## Changelog
 
@@ -26,8 +32,8 @@ And also allows **update the modify time and modifier automatic** in the file he
 "autoHeader": {
     "format": {
         "startWith": "/**",
-        "middleWith": "*",
-        "endWith": "*/",
+        "middleWith": " * ",
+        "endWith": " */",
         "headerPrefix": "@",
     },
     "header": {
@@ -54,13 +60,13 @@ And also allows **update the modify time and modifier automatic** in the file he
 1. From the command palette `Ctrl`-`Shift`-`P` (Windows, Linux) or `Cmd`-`Shift`-`P` (OSX)
 2. Type the `Settings` to select and open Settings(JSON)
 3. Add the configurations like this:
-   
+
 ```bash
 "autoHeader": {
     "format": {
         "startWith": "/**",
-        "middleWith": "*",
-        "endWith": "*/",
+        "middleWith": " * ",
+        "endWith": " */",
         "headerPrefix": "@",
     },
     "header": {

@@ -17,6 +17,9 @@ enum FileType {
   Python = '.py',
   Javascript = '.js',
   Typescript = '.ts',
+  Java = '.java',
+  MD = '.md',
+  MKD = '.mkd',
 }
 
 export default FileType;

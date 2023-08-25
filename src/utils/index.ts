@@ -28,26 +28,36 @@ const getFormat = (extname: string, format: any) => {
     case FileType.Vue:
       result = {
         startWith: '<!--',
-        middleWith: '*',
-        endWith: '-->',
+        middleWith: ' * ',
+        endWith: ' -->',
         headerPrefix: '@',
       };
       break;
     case FileType.Python:
       result = {
         startWith: `'''`,
-        middleWith: '#',
+        middleWith: ' # ',
         endWith: `'''`,
         headerPrefix: '@',
       };
       break;
     case FileType.Javascript:
     case FileType.Typescript:
+    case FileType.Java:
       result = {
         startWith: `/**`,
-        middleWith: '*',
-        endWith: `*/`,
+        middleWith: ' * ',
+        endWith: ` */`,
         headerPrefix: '@',
+      };
+      break;
+    case FileType.MD:
+    case FileType.MKD:
+      result = {
+        startWith: `---`,
+        middleWith: '',
+        endWith: `---`,
+        headerPrefix: '',
       };
       break;
     default:
@@ -99,7 +109,7 @@ export const generateHeaderTemplate = (config: IConfig, filePath: string) => {
         if (!element) {
           value = ``;
         }
-        result += ` ${format.middleWith} ${format.headerPrefix} ${key}:${value}\n`;
+        result += `${format.middleWith}${format.headerPrefix}${key}:${value}\n`;
         continue;
       }
 
@@ -109,15 +119,15 @@ export const generateHeaderTemplate = (config: IConfig, filePath: string) => {
           case ItemType.CreateTime:
             timeFormat = element.format || 'YYYY-MM-DD HH:mm:ss';
             const createTime = moment(fileCreateTime).format(timeFormat);
-            result += ` ${format.middleWith} ${format.headerPrefix} ${key}: ${createTime}\n`;
+            result += `${format.middleWith}${format.headerPrefix}${key}: ${createTime}\n`;
             break;
           case ItemType.ModifyTime:
             timeFormat = element.format || 'YYYY-MM-DD HH:mm:ss';
             const modifyTime = moment().format(timeFormat);
-            result += ` ${format.middleWith} ${format.headerPrefix} ${key}: ${modifyTime}\n`;
+            result += `${format.middleWith}${format.headerPrefix}${key}: ${modifyTime}\n`;
             break;
           case ItemType.Modifier:
-            result += ` ${format.middleWith} ${format.headerPrefix} ${key}: ${element.value}\n`;
+            result += `${format.middleWith}${format.headerPrefix}${key}: ${element.value}\n`;
             break;
           default:
             break;
@@ -127,7 +137,7 @@ export const generateHeaderTemplate = (config: IConfig, filePath: string) => {
   }
 
   // Add footer comment
-  result += ` ${format.endWith}\n\n`;
+  result += `${format.endWith}\n\n`;
 
   return result;
 };
@@ -167,13 +177,13 @@ export const getModify = (config: IConfig, filePath: string) => {
             const modifyTime = moment().format(timeFormat);
             result.modifyTime = {
               key,
-              value: ` ${format.middleWith} ${format.headerPrefix} ${key}: ${modifyTime}`,
+              value: `${format.middleWith}${format.headerPrefix}${key}: ${modifyTime}`,
             };
             break;
           case ItemType.Modifier:
             result.modifier = {
               key,
-              value: ` ${format.middleWith} ${format.headerPrefix} ${key}: ${element.value}`,
+              value: `${format.middleWith}${format.headerPrefix}${key}: ${element.value}`,
             };
             break;
           default:
