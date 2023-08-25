@@ -7,7 +7,7 @@
  */
 
 import * as fs from 'fs';
-import * as moment from 'moment';
+// import * as moment from 'moment';
 import * as path from 'path';
 
 import FileType from '../enums/fileType';
@@ -117,13 +117,15 @@ export const generateHeaderTemplate = (config: IConfig, filePath: string) => {
         let timeFormat;
         switch (element.type) {
           case ItemType.CreateTime:
-            timeFormat = element.format || 'YYYY-MM-DD HH:mm:ss';
-            const createTime = moment(fileCreateTime).format(timeFormat);
+            timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
+            // const createTime = moment(fileCreateTime).format(timeFormat);
+            const createTime = formatDate(fileCreateTime, timeFormat);
             result += `${format.middleWith}${format.headerPrefix}${key}: ${createTime}\n`;
             break;
           case ItemType.ModifyTime:
-            timeFormat = element.format || 'YYYY-MM-DD HH:mm:ss';
-            const modifyTime = moment().format(timeFormat);
+            timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
+            // const modifyTime = moment().format(timeFormat);
+            const modifyTime = formatDate(new Date(), timeFormat)
             result += `${format.middleWith}${format.headerPrefix}${key}: ${modifyTime}\n`;
             break;
           case ItemType.Modifier:
@@ -141,6 +143,24 @@ export const generateHeaderTemplate = (config: IConfig, filePath: string) => {
 
   return result;
 };
+
+export const formatDate = (date: Date, format = 'yyyy-MM-dd HH:mm:ss'): string => {
+  const year = date.getFullYear()
+  const month = date.getMonth() + 1
+  const day = date.getDate()
+  const hour = date.getHours()
+  const minute = date.getMinutes()
+  const second = date.getSeconds()
+  const formatMap: { [key: string]: any } = {
+    yyyy: year.toString(),
+    MM: month.toString().padStart(2, '0'),
+    dd: day.toString().padStart(2, '0'),
+    HH: hour.toString().padStart(2, '0'),
+    mm: minute.toString().padStart(2, '0'),
+    ss: second.toString().padStart(2, '0')
+  }
+  return format.replace(/yyyy|MM|dd|HH|mm|ss/g, (match) => formatMap[match])
+}
 
 /**
  * Get mofidy entity
@@ -173,8 +193,9 @@ export const getModify = (config: IConfig, filePath: string) => {
       if (typeof element === 'object') {
         switch (element.type) {
           case  ItemType.ModifyTime:
-            const timeFormat = element.format || 'YYYY-MM-DD HH:mm:ss';
-            const modifyTime = moment().format(timeFormat);
+            const timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
+            // const modifyTime = moment().format(timeFormat);
+            const modifyTime = formatDate(new Date(), timeFormat);
             result.modifyTime = {
               key,
               value: `${format.middleWith}${format.headerPrefix}${key}: ${modifyTime}`,

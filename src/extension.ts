@@ -18,6 +18,7 @@ export function activate(context: ExtensionContext) {
   for (const [key, value] of commandList) {
     const command = commands.registerCommand(key, value.handler);
     context.subscriptions.push(command);
+    console.log("注册菜单:"+key);
   }
 
   // Handle events

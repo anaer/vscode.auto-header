@@ -20,7 +20,7 @@ const defaultConfig = {
     'Author': 'Your name',
     'Create Time': {
       type: 'createTime',
-      format: 'YYYY-MM-DD HH:mm:ss',
+      format: 'yyyy-MM-dd HH:mm:ss',
     },
     'Modified by': {
       type: 'modifier',
@@ -28,7 +28,7 @@ const defaultConfig = {
     },
     'Modified time': {
       type: 'modifyTime',
-      format: 'YYYY-MM-DD HH:mm:ss',
+      format: 'yyyy-MM-dd HH:mm:ss',
     },
     'Description': '',
   },

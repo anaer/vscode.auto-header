@@ -3,6 +3,7 @@
 1. 去掉代码中的空格拼接符, 完全根据配置信息进行配置
 2. 添加markdown文件头格式
 3. 调整package.json, 去掉无用配置
+4. 为了减少扩展包大小, 去掉moment依赖, 使用原生日期格式化, 只支持yyyy|MM|dd|HH|mm|ss这6项配置
 
 # auto-header
 
@@ -40,7 +41,7 @@ And also allows **update the modify time and modifier automatic** in the file he
         "Author": "Your name",
         "Create Time": {
             "type": "createTime",
-            "format": "YYYY-MM-DD HH:mm:ss",
+            "format": "yyyy-MM-dd HH:mm:ss",
         },
         "Modified by": {
             "type": "modifier",
@@ -48,7 +49,7 @@ And also allows **update the modify time and modifier automatic** in the file he
         },
         "Modified time": {
             "type": "modifyTime",
-            "format": "YYYY-MM-DD HH:mm:ss"
+            "format": "yyyy-MM-dd HH:mm:ss"
         },
         "Description": "",
     }
@@ -73,7 +74,7 @@ And also allows **update the modify time and modifier automatic** in the file he
         "Author": "Daniel Lin",
         "Create Time": {
             "type": "createTime",
-            "format": "YYYY-MM-DD HH:mm:ss",
+            "format": "yyyy-MM-dd HH:mm:ss",
         },
         "Modified by": {
             "type": "modifier",
@@ -81,7 +82,7 @@ And also allows **update the modify time and modifier automatic** in the file he
         },
         "Modified time": {
             "type": "modifyTime",
-            "format": "YYYY-MM-DD HH:mm:ss"
+            "format": "yyyy-MM-dd HH:mm:ss"
         },
         "Description": "",
     }
@@ -108,7 +109,7 @@ If the value typeof `object`, it support type:
 ```
 
 When you select [`createTime`, `modifyTime`], you can set the format of the time
-If you are not setting the format of the time, it will use the format like `YYYY-MM-DD HH:mm:ss`
+If you are not setting the format of the time, it will use the format like `yyyy-MM-dd HH:mm:ss`
 
 When you select [`modifier`], this attribute will use to update the `modifier` in the file header comments when the text editor did save
 
