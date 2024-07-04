@@ -118,13 +118,11 @@ export const generateHeaderTemplate = (config: IConfig, filePath: string) => {
         switch (element.type) {
           case ItemType.CreateTime:
             timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
-            // const createTime = moment(fileCreateTime).format(timeFormat);
             const createTime = formatDate(fileCreateTime, timeFormat);
             result += `${format.middleWith}${format.headerPrefix}${key}: ${createTime}\n`;
             break;
           case ItemType.ModifyTime:
             timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
-            // const modifyTime = moment().format(timeFormat);
             const modifyTime = formatDate(new Date(), timeFormat)
             result += `${format.middleWith}${format.headerPrefix}${key}: ${modifyTime}\n`;
             break;
@@ -169,6 +167,10 @@ export const formatDate = (date: Date, format = 'yyyy-MM-dd HH:mm:ss'): string =
  */
 export const getModify = (config: IConfig, filePath: string) => {
   const result = {
+    createTime: {
+      key: '',
+      value: '',
+    },
     modifyTime: {
       key: '',
       value: '',
@@ -179,6 +181,7 @@ export const getModify = (config: IConfig, filePath: string) => {
     },
   };
 
+  const fileCreateTime = fs.statSync(filePath).birthtime;
   const extname = path.extname(filePath);
   const format = getFormat(extname, config.format);
 
@@ -191,10 +194,18 @@ export const getModify = (config: IConfig, filePath: string) => {
       }
 
       if (typeof element === 'object') {
+        let timeFormat;
         switch (element.type) {
-          case  ItemType.ModifyTime:
-            const timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
-            // const modifyTime = moment().format(timeFormat);
+          case ItemType.CreateTime:
+            timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
+            const createTime = formatDate(fileCreateTime, timeFormat);
+            result.createTime = {
+              key,
+              value: `${format.middleWith}${format.headerPrefix}${key}: ${createTime}`,
+            };
+            break;
+          case ItemType.ModifyTime:
+            timeFormat = element.format || 'yyyy-MM-dd HH:mm:ss';
             const modifyTime = formatDate(new Date(), timeFormat);
             result.modifyTime = {
               key,
@@ -223,6 +234,14 @@ export const getModify = (config: IConfig, filePath: string) => {
  */
 export const checkLineStartsWith = (target: string, match: string) => {
   if (target.startsWith(match)) {
+    return true;
+  }
+
+  return false;
+};
+
+export const checkLineStartsWith2 = (target: string, match: string) => {
+  if (target.startsWith(match) && target.replace(match, '').trim().length === 0 ) {
     return true;
   }
 

@@ -9,7 +9,7 @@
 import { Position, Range, TextDocument, TextEditorEdit, window, workspace } from 'vscode';
 
 import defaultConfig from '../../config/default.config';
-import { checkLineStartsWith, getConfigOptionCount, getModify } from '../../utils/index';
+import { checkLineStartsWith, checkLineStartsWith2, getConfigOptionCount, getModify } from '../../utils/index';
 
 // Last save time
 let lastSaveTime = 0;
@@ -42,13 +42,16 @@ export const onDidSaveTextDocument = (document: TextDocument) => {
 
   // Get modify entity
   const modifyEntity = getModify({ format, header }, document.fileName);
+  const createTime = modifyEntity.createTime;
   const modifyTime = modifyEntity.modifyTime;
   const modifier = modifyEntity.modifier;
 
   const length = getConfigOptionCount(header);
 
-  let mofidyTimeRange = new Range(new Position(0, 0), new Position(0, 0));
+  let createTimeRange = new Range(new Position(0, 0), new Position(0, 0));
+  let modifyTimeRange = new Range(new Position(0, 0), new Position(0, 0));
   let modifierRange = new Range(new Position(0, 0), new Position(0, 0));
+  const createTimeStartsWith = `${format.middleWith}${format.headerPrefix}${createTime.key}:`;
   const modifyTimeStartsWith = `${format.middleWith}${format.headerPrefix}${modifyTime.key}:`;
   const modifierStartsWith = `${format.middleWith}${format.headerPrefix}${modifier.key}:`;
   for (let index = 0; index < length; index++) {
@@ -56,10 +59,17 @@ export const onDidSaveTextDocument = (document: TextDocument) => {
     const linetAt = document.lineAt(index);
     const line = linetAt.text;
 
+    // 判断是否创建时间行, 同时判断配置是否为空
+    const isCreateTimeLine = checkLineStartsWith2(line, createTimeStartsWith);
+    if (isCreateTimeLine) {
+      createTimeRange = linetAt.range;
+      continue;
+    }
+
     // tslint:disable-next-line:max-line-length
-    const isMofidyTimeLine = checkLineStartsWith(line, modifyTimeStartsWith);
-    if (isMofidyTimeLine) {
-      mofidyTimeRange = linetAt.range;
+    const isModifyTimeLine = checkLineStartsWith(line, modifyTimeStartsWith);
+    if (isModifyTimeLine) {
+      modifyTimeRange = linetAt.range;
       continue;
     }
 
@@ -69,24 +79,31 @@ export const onDidSaveTextDocument = (document: TextDocument) => {
     }
   }
 
-  const isUpdateModifyTime = !mofidyTimeRange.isEmpty && modifyTime.key && modifyTime.value;
+  const isUpdateCreateTime = !createTimeRange.isEmpty && createTime.key && createTime.value;
+  const isUpdateModifyTime = !modifyTimeRange.isEmpty && modifyTime.key && modifyTime.value;
   const isUpdateModifier = !modifierRange.isEmpty && modifier.key && modifier.value;
 
-  if (!isUpdateModifyTime && !isUpdateModifier) {
+  if (!isUpdateCreateTime && !isUpdateModifyTime && !isUpdateModifier) {
     return;
   }
 
   // Update header
-  activeTextEditor.edit((editBuilder: TextEditorEdit) => {
-    if (isUpdateModifyTime) {
-      editBuilder.replace(mofidyTimeRange, modifyTime.value);
-    }
+  if (activeTextEditor) {
+    activeTextEditor.edit((editBuilder: TextEditorEdit) => {
+      if (isUpdateCreateTime) {
+        editBuilder.replace(createTimeRange, createTime.value);
+      }
 
-    if (isUpdateModifier) {
-      editBuilder.replace(modifierRange, modifier.value);
-    }
-  });
-  setTimeout(() => {
-    document.save();
-  }, 200);
+      if (isUpdateModifyTime) {
+        editBuilder.replace(modifyTimeRange, modifyTime.value);
+      }
+
+      if (isUpdateModifier) {
+        editBuilder.replace(modifierRange, modifier.value);
+      }
+    });
+    setTimeout(() => {
+      document.save();
+    }, 200);
+  }
 };

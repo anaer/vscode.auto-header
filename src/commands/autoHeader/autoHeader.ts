@@ -24,17 +24,19 @@ const autoHeader = () => {
   // Selected activated file the very first time the command is executed
   const activeTextEditor = window.activeTextEditor;
 
-  activeTextEditor.edit((editBuilder: TextEditorEdit) => {
-    try {
-      const filePath = activeTextEditor.document.fileName;
-      const headerTemplate = generateHeaderTemplate({format, header}, filePath);
+  if (activeTextEditor) {
+    activeTextEditor.edit((editBuilder: TextEditorEdit) => {
+      try {
+        const filePath = activeTextEditor.document.fileName;
+        const headerTemplate = generateHeaderTemplate({format, header}, filePath);
 
-      // Insert Header
-      editBuilder.insert(new Position(0, 0), headerTemplate);
-    } catch (error) {
-      throw (new Error(ErrorType.InsertFailure));
-    }
-  });
+        // Insert Header
+        editBuilder.insert(new Position(0, 0), headerTemplate);
+      } catch (error) {
+        throw (new Error(ErrorType.InsertFailure));
+      }
+    });
+  }
 };
 
 export default autoHeader;

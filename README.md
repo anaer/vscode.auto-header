@@ -4,6 +4,7 @@
 2. 添加markdown文件头格式
 3. 调整package.json, 去掉无用配置
 4. 为了减少扩展包大小, 去掉moment依赖, 使用原生日期格式化, 只支持yyyy|MM|dd|HH|mm|ss这6项配置
+5. 当createTime配置项值为空时, 保存时自动填充文件的创建时间
 
 # auto-header
 

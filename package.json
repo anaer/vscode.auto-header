@@ -2,7 +2,7 @@
   "name": "vscode-auto-header",
   "displayName": "Auto Header",
   "description": "This extension allows quickly add file header in the active text editor. And also allows to update the modify time and modifier automatic in the file header comments.",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "icon": "images/icon.png",
   "publisher": "anaer",
   "author": "anaer",
@@ -22,14 +22,15 @@
     "test": "npm run compile && node ./node_modules/vscode/bin/test"
   },
   "dependencies": {
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "typescript": "^5.5.3"
   },
   "devDependencies": {
-    "@types/vscode": "^1.1.0",
+    "@types/mocha": "^10.0.7",
     "@types/node": "^8.10.25",
+    "@types/vscode": "^1.1.0",
     "fs": "^0.0.1-security",
-    "tslint": "^5.8.0",
-    "typescript": "^2.6.1"
+    "tslint": "^5.8.0"
   },
   "engines": {
     "vscode": "^1.1.0"
